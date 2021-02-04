@@ -43,7 +43,13 @@ app.get("/", function(req, res) {
 
 const day = date.getDate();
 
-  res.render("list", {listTitle: day, newListItems: items});
+Item.find({}, function(err,foundItems){
+  if(err){
+    console.log(err);
+  }else{
+    res.render("list", {listTitle: day, newListItems: foundItems});
+  }
+});
 
 });
 
