@@ -30,24 +30,26 @@ const item2 = new Item({
 
 const defaultItem = [item1,item2];
 
-Item.insertMany(defaultItem,function(err){
-  if(err){
-    console.log(err);
-  }else{
-    console.log("Entry added Successfully");
-  }
-})
-
-
 app.get("/", function(req, res) {
 
 const day = date.getDate();
 
 Item.find({}, function(err,foundItems){
-  if(err){
-    console.log(err);
+  if(foundItems.length === 0){
+    Item.insertMany(defaultItem,function(err){
+      if(err){
+        console.log(err);
+      }else{
+        console.log("Entry added Successfully");
+      }
+    })
+    res.redirect("/");
   }else{
-    res.render("list", {listTitle: day, newListItems: foundItems});
+    if(err){
+      console.log(err);
+    }else{
+      res.render("list", {listTitle: day, newListItems: foundItems});
+    }
   }
 });
 
