@@ -4,6 +4,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const date = require(__dirname + "/date.js");
 const mongoose = require("mongoose");
+const _ = require("lodash");
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
 mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true});
+mongoose.set('useFindAndModify', false);
 
 const itemsSchema ={
   name: String
@@ -63,7 +65,7 @@ Item.find({}, function(err,foundItems){
 });
 
 app.get("/:ListName",function(req,res){
-  const customListName = req.params.ListName;
+  const customListName = _.capitaliza(req.params.ListName);
 
   List.findOne({name: customListName},function(err,foundList){
     if(!err){
@@ -111,7 +113,7 @@ app.post("/", function(req, res){
 
 app.post("/delete", function(req, res){
   const itemId = req.body.checkbox;
-  const listName = req.body.listTitle;
+  const listName = req.body.list;
 
   if(listName === "Today"){
   Item.findByIdAndRemove(itemId,function(err){
@@ -119,15 +121,13 @@ app.post("/delete", function(req, res){
       console.log("Task Completed");
       res.redirect("/");
     }
-  })
+  });
 }else{
-
-  List.findOneAndUpdate({name: listName},{$pull: {item :{_id: itemId}}}, function(err,foundList){
+  List.findOneAndUpdate({name: listName},{$pull: {item: {_id: itemId}}}, function(err,foundList){
     if(!err){
       res.redirect("/" + listName);
     }
-  })
-
+  });
 }
 
 });
