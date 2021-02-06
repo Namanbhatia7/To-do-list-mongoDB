@@ -111,13 +111,18 @@ app.post("/", function(req, res){
 
 app.post("/delete", function(req, res){
   const itemId = req.body.checkbox;
+  const listName = req.body.listTitle;
 
+  if(listName === "Today"){
   Item.findByIdAndRemove(itemId,function(err){
     if(!err){
       console.log("Task Completed");
       res.redirect("/");
     }
   })
+}else{
+  
+}
 
 });
 
