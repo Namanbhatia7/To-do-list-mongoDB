@@ -55,7 +55,7 @@ Item.find({}, function(err,foundItems){
     if(err){
       console.log(err);
     }else{
-      res.render("list", {listTitle: day, newListItems: foundItems});
+      res.render("list", {listTitle: "Today", newListItems: foundItems});
     }
   }
 });
@@ -79,8 +79,6 @@ app.get("/:ListName",function(req,res){
         res.redirect("/" + customListName)
       }else{
         res.render("list", {listTitle: foundList.name, newListItems: foundList.item});
-
-
       }
     }
   })
@@ -90,14 +88,24 @@ app.get("/:ListName",function(req,res){
 app.post("/", function(req, res){
 
   const itemName = req.body.newItem;
+  const listName = req.body.list;
 
   const item = new Item({
      name: itemName
   });
 
-  item.save();
+  if( listName === "Today"){
+    item.save();
+    res.redirect('/'); 
+  }else{
+    List.findOne({name: listName}, function(err,foundList){
+      foundList.item.push(item);
+      foundList.save();
+      res.redirect("/"+listName);
+    })
+  }
 
-  res.redirect('/');
+  
 
 });
 
