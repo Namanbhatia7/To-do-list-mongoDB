@@ -121,7 +121,13 @@ app.post("/delete", function(req, res){
     }
   })
 }else{
-  
+
+  List.findOneAndUpdate({name: listName},{$pull: {item :{_id: itemId}}}, function(err,foundList){
+    if(!err){
+      res.redirect("/" + listName);
+    }
+  })
+
 }
 
 });
