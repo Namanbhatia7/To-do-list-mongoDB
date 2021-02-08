@@ -4,6 +4,15 @@
     <h1> <%= listTitle %> </h1>
   </div>
 
+  <div class="list">
+    <div class="box" id="heading">
+      <% listNames.forEach(function(list){ %>
+       <% if(list.name != "Favicon.ico" && list.name != "favicon.ico"){ %>
+         <a href="/<%= list.name %>"><%= list.name %> </a> 
+       <% } %>
+      <% }) %>
+     </div>
+
   <div class="box">
     <% newListItems.forEach(function(item) { %>
       <form action="/delete" method="post">
@@ -19,6 +28,7 @@
         <input type="text" name="newItem" placeholder="New Item" autocomplete="off">
         <button type="submit" name="list" value="<%= listTitle %>">+</button>
       </form>
+  </div>
   </div>
 
 <%- include("footer") -%>
